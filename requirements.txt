@@ -1,0 +1,5 @@
+langchain_core==0.3.41
+langchain_together==0.3.0
+pandas==2.2.3
+tqdm==4.66.5
+tyro==0.8.11
