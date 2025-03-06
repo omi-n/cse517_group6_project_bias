@@ -106,6 +106,8 @@ class Args:
     add_age: AgeBias | bool = False
     add_location: LocationBias | bool = False
     add_sex: SexBias | bool = False
+    model: str = "meta-llama/Llama-3-70b-chat-hf"
+    # other one is "meta-llama/Llama-2-70b-chat-hf"
 
 
 if __name__ == "__main__":
@@ -117,7 +119,7 @@ if __name__ == "__main__":
 
     chat = ChatTogether(
         together_api_key=os.environ["TG_KEY"],
-        model="meta-llama/Llama-3-70b-chat-hf",
+        model=args.model,
         temperature=0.0,
     )
 
