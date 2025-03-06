@@ -65,6 +65,7 @@ class PromptDataset:
 
     @staticmethod
     def fillna_col(col: pd.Series):
+        # shut up pandas
         with pd.option_context("future.no_silent_downcasting", True):
             return col.fillna(False).replace({"x": True})
 
@@ -124,7 +125,12 @@ if __name__ == "__main__":
     ):
         result = chat.generate_prompt([i])
         generation = result.generations[0][0]
-        text = generation.text
+
+        try:
+            text = generation.text
+        except AttributeError:
+            text = ""
+
         metadata = result.generations[0][0].message.response_metadata
         outputs.append({"text": text, "metadata": metadata})
 
