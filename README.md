@@ -11,3 +11,5 @@ We are reproducing the following paper:
     journal={EMNLP Findings}
 }
 ```
+
+The data from the authors are provided by their repository accessible [here](https://github.com/sharonlevy/ContextualQuestions/tree/main).
