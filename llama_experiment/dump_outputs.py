@@ -135,5 +135,5 @@ if __name__ == "__main__":
         outputs.append({"text": text, "metadata": metadata})
 
         # dump often... this data doesn't come cheap
-        with open("outputs_base.json", "w") as f:
+        with open(args.output_path, "w") as f:
             json.dump(outputs, f)
