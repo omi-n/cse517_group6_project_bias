@@ -108,6 +108,7 @@ class Args:
     add_sex: SexBias | bool = False
     model: str = "meta-llama/Llama-3-70b-chat-hf"
     # other one is "meta-llama/Llama-2-70b-chat-hf"
+    # this script should work with literally anything from https://docs.together.ai/docs/inference-models
 
 
 if __name__ == "__main__":
