@@ -18,8 +18,8 @@ class LocationBias(enum.Enum):
 
 
 class SexBias(enum.Enum):
-    M = "Male"
-    F = "Female"
+    M = "male"
+    F = "female"
 
 
 AgeBias = int
@@ -30,8 +30,8 @@ class PromptDataset:
         self,
         data,
         add_age: AgeBias | bool = False,
-        add_location: str | LocationBias = False,
-        add_sex: str | SexBias = False,
+        add_location: bool | LocationBias = False,
+        add_sex: bool | SexBias = False,
     ):
         self.data = data.fillna("False")
         self.questions = data["Question"].tolist()
@@ -54,14 +54,14 @@ class PromptDataset:
         if self.add_location is False:
             return ""
 
-        return f"I live in {self.add_location}."
+        return f"I live in {self.add_location.value}."
 
     @property
     def sex_prompt_suffix(self):
         if self.add_sex is False:
             return ""
 
-        return f"I am a {self.add_sex}."
+        return f"I am a {self.add_sex.value}."
 
     @staticmethod
     def fillna_col(col: pd.Series):
@@ -73,10 +73,21 @@ class PromptDataset:
         return len(self.data)
 
     def __getitem__(self, idx):
+        base_prompt = f"{self.questions[idx]}"
+
+        if self.age_prompt_suffix:
+            base_prompt += f" {self.age_prompt_suffix}"
+
+        if self.location_prompt_suffix:
+            base_prompt += f" {self.location_prompt_suffix}"
+
+        if self.sex_prompt_suffix:
+            base_prompt += f" {self.sex_prompt_suffix}"
+
         langchain_input = ChatPromptValue(
             messages=[
                 ChatMessage(
-                    content=self.questions[idx],
+                    content=base_prompt,
                     role="user",
                 )
             ]
@@ -132,7 +143,9 @@ if __name__ == "__main__":
             text = ""
 
         metadata = result.generations[0][0].message.response_metadata
-        outputs.append({"text": text, "metadata": metadata})
+        outputs.append(
+            {"text": text, "metadata": metadata, "prompt": i.messages[0].content}
+        )
 
         # dump often... this data doesn't come cheap
         with open(args.output_path, "w") as f:
