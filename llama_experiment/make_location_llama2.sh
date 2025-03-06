@@ -10,5 +10,5 @@ LOCATIONS=(HI ID MA SD VT WY)
 
 for location in "${LOCATIONS[@]}"
 do
-    python dump_outputs.py --output_path ./results/location/${location}.json --add_location $location --model "meta-llama/Llama-2-70b-chat-hf"
+    python dump_outputs.py --output_path ./results/location_llama2/${location}.json --add_location $location --model "meta-llama/Llama-2-70b-chat-hf"
 done
