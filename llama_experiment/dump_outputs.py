@@ -139,7 +139,7 @@ if __name__ == "__main__":
         llm = HuggingFacePipeline.from_model_id(
             model_id="meta-llama/Llama-2-70b-chat-hf",
             task="text-generation",
-            device="cuda",
+            device_map="auto",
             pipeline_kwargs={
                 "max_new_tokens": 500,
                 "temperature": 0.0,
