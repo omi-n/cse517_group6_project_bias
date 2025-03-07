@@ -1,7 +1,7 @@
 import tyro
 from langchain_together import ChatTogether
 from langchain_core.prompt_values import ChatPromptValue
-from langchain_core.messages import ChatMessage
+from langchain_core.messages import ChatMessage, HumanMessage, SystemMessage
 from langchain_huggingface import (
     ChatHuggingFace,
     HuggingFaceEndpoint,
@@ -91,10 +91,13 @@ class PromptDataset:
 
         langchain_input = ChatPromptValue(
             messages=[
-                ChatMessage(
+                # ChatMessage(
+                #     content=base_prompt,
+                #     role="user",
+                # )
+                HumanMessage(
                     content=base_prompt,
-                    role="user",
-                )
+                ),
             ]
         )
 
