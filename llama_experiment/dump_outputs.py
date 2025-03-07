@@ -2,6 +2,11 @@ import tyro
 from langchain_together import ChatTogether
 from langchain_core.prompt_values import ChatPromptValue
 from langchain_core.messages import ChatMessage
+from langchain_huggingface import (
+    ChatHuggingFace,
+    HuggingFaceEndpoint,
+    HuggingFacePipeline,
+)
 import os
 import pandas as pd
 import enum
@@ -118,11 +123,28 @@ if __name__ == "__main__":
     args = tyro.cli(Args)
     os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
 
-    chat = ChatTogether(
-        together_api_key=os.environ["TG_KEY"],
-        model=args.model,
-        temperature=0.0,
-    )
+    if args.model == "meta-llama/Llama-3-70b-chat-hf":
+        chat = ChatTogether(
+            together_api_key=os.environ["TG_KEY"],
+            model=args.model,
+            temperature=0.0,
+        )
+    else:
+        # llm = HuggingFaceEndpoint(
+        #     repo_id=args.model,
+        #     max_new_tokens=512,
+        #     temperature=0.0,
+        # )
+        # chat = ChatHuggingFace(llm=llm, verbose=False)
+        llm = HuggingFacePipeline.from_model_id(
+            model_id="meta-llama/Llama-2-70b-chat-hf",
+            task="text-generation",
+            pipeline_kwargs={
+                "max_new_tokens": 500,
+                "temperature": 0.0,
+            },
+        )
+        chat = ChatHuggingFace(llm=llm, verbose=False)
 
     data = pd.read_csv("../labeled_contexual_questions_submit.csv")
 
