@@ -115,9 +115,16 @@ class Args:
     add_location: LocationBias | bool = False
     add_sex: SexBias | bool = False
     model: str = "meta-llama/Llama-3-70b-chat-hf"
+    temperature: float = 0.0
     # other one is "meta-llama/Llama-2-70b-chat-hf"
     # this script should work with literally anything from https://docs.together.ai/docs/inference-models
 
+
+TOGETHER_SUPPORTED_MODELS = [
+    "meta-llama/Llama-3-70b-chat-hf",
+    "meta-llama/Llama-2-13b-chat-hf",
+    "meta-llama/Llama-2-70b-hf",
+]
 
 if __name__ == "__main__":
     import json
@@ -126,29 +133,14 @@ if __name__ == "__main__":
     args = tyro.cli(Args)
     os.makedirs(os.path.dirname(args.output_path), exist_ok=True)
 
-    if args.model == "meta-llama/Llama-3-70b-chat-hf":
+    if args.model in TOGETHER_SUPPORTED_MODELS:
         chat = ChatTogether(
             together_api_key=os.environ["TG_KEY"],
             model=args.model,
-            temperature=0.0,
+            temperature=args.temperature,
         )
     else:
-        # llm = HuggingFaceEndpoint(
-        #     repo_id=args.model,
-        #     max_new_tokens=512,
-        #     temperature=0.0,
-        # )
-        # chat = ChatHuggingFace(llm=llm, verbose=False)
-        llm = HuggingFacePipeline.from_model_id(
-            model_id="meta-llama/Llama-2-70b-chat-hf",
-            task="text-generation",
-            device_map="auto",
-            pipeline_kwargs={
-                "max_new_tokens": 500,
-                "temperature": 0.0,
-            },
-        )
-        chat = ChatHuggingFace(llm=llm, verbose=False)
+        raise ValueError(f"Model {args.model} not supported")
 
     data = pd.read_csv("../labeled_contexual_questions_submit.csv")
 
