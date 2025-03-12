@@ -12,4 +12,14 @@ We are reproducing the following paper:
 }
 ```
 
+To run evaluation, please use the following command
+```
+python evaluate.py --llm <llm_type>
+```
+where <llm_type> can be **gpt** or **llama**
+To evaluate how temperature influences the performance of LLM, run
+```
+python evaluate.py --llm <llm_type> --temp
+```
+
 The data from the authors are provided by their repository accessible [here](https://github.com/sharonlevy/ContextualQuestions/tree/main).
